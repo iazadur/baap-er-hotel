@@ -1,61 +1,62 @@
-// handle deposit button event 
+
+function getInputValue(inputIdName) {
+    const inputField = document.getElementById(inputIdName)
+    const inputAmmount = inputField.value
+
+    inputField.value = '';
+    return parseFloat(inputAmmount)
+}
+
+function updateTotalField(totalFieldId, previousTotal) {
+    const totalElement = document.getElementById(totalFieldId)
+    const totalText = totalElement.innerText
+    const withdrawAmmount = previousTotal + parseFloat(totalText)
+    totalElement.innerText = withdrawAmmount
+}
+
+function currentBanlance() {
+
+    const balanceTotal = document.getElementById('balance-total')
+    const balanceTotalText = balanceTotal.innerText
+    const previousBalanceTotal = parseFloat(balanceTotalText)
+    return previousBalanceTotal
+}
+
+function updateBlance(ammount, isAdd) {
+    const balanceTotal = document.getElementById('balance-total')
+    if (isAdd == true) {
+        balanceTotal.innerText = currentBanlance() + ammount
+    } else {
+        balanceTotal.innerText = currentBanlance() - ammount
+    }
+
+}
 
 document.getElementById('deposit-button').addEventListener('click', function () {
 
-    // get deposit you want 
-    const depositInput = document.getElementById('deposit-input')
-    const newDepositAmmount = depositInput.value
+    const depositAmmount = getInputValue('deposit-input')
+    if (depositAmmount > 0) {
+        updateTotalField('deposit-total', depositAmmount)
 
-    // get previous deposit 
-    const depositTotal = document.getElementById('deposit-total')
-    const previousDepositAmmount = depositTotal.innerText
+        updateBlance(depositAmmount, true)
 
-
-
-    // update you deposit dashboard
-    const newDepositTotal = parseFloat(newDepositAmmount) + parseFloat(previousDepositAmmount)
-
-    depositTotal.innerText = newDepositTotal
+    }
 
 
-    // update account balance 
-    const balanceTotal = document.getElementById('balance-total')
-    const balanceTotalAmmount = balanceTotal.innerText
-    const previousBalance = parseFloat(balanceTotalAmmount)
 
-    const updatebalance = parseFloat(newDepositAmmount) + previousBalance
-    balanceTotal.innerText = updatebalance
-
-    // clear input field 
-    depositInput.value = ''
 })
 
-// handle withdraw handler 
 
 document.getElementById('withdraw-button').addEventListener('click', function () {
-    const withdrawInput = document.getElementById('withdraw-input')
-    console.log(withdrawInput.value)
-    const withdrawAmmountText = withdrawInput.value
-    const newWithdrawAmmount = parseFloat(withdrawAmmountText)
 
-    // set withdraw total 
+    const withdrawAmmount = getInputValue('withdraw-input')
+    if (withdrawAmmount > 0 && withdrawAmmount <= currentBanlance()) {
 
-    const withdrawTotal = document.getElementById('withdraw-total')
-    const previousWithdrawText = withdrawTotal.innerText
-    const previousWithdrawTotal = parseFloat(previousWithdrawText)
-    console.log(previousWithdrawTotal)
+        updateTotalField('withdraw-total', withdrawAmmount)
 
-    const newWithdrawTotal = previousWithdrawTotal + newWithdrawAmmount
-    withdrawTotal.innerText = newWithdrawTotal
+        updateBlance(withdrawAmmount, false)
 
-    // clear withdraw input 
-    withdrawInput.value = ''
+    }
 
-    // update balance 
-    const balanceTotal = document.getElementById('balance-total')
-    const balanceTotalAmmount = balanceTotal.innerText
-    const previousBalance = parseFloat(balanceTotalAmmount)
 
-    const updatebalance = previousBalance - newWithdrawTotal
-    balanceTotal.innerText = updatebalance
 })
